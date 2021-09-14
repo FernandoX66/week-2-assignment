@@ -115,13 +115,13 @@ class TaskList {
 
     return SEARCHEDTASKS;
   }
-  filterTasks(status, tasks) {
+  filterTasks(status, tasksArray) {
     const FILTEREDTASKS = [];
 
     if (status === 'None') {
-      return tasks;
+      return tasksArray;
     } else {
-      for (let task of tasks) {
+      for (let task of tasksArray) {
         if (task.status === status) {
           FILTEREDTASKS.push(task);
         }
@@ -146,7 +146,7 @@ class Storage {
   static saveId(id) {
     localStorage.setItem('id', id);
   }
-  static getId() {
+  getId() {
     return localStorage.getItem('id');
   }
 }
@@ -207,7 +207,7 @@ for (let task of TASKS.tasks) {
 if (TASKS.tasks.length === 0) {
   IDFIELD.value = 1;
 } else {
-  IDFIELD.value = Storage.getId();
+  IDFIELD.value = new Storage().getId();
 }
 
 UI.HideEditForm(FILTERSDIV, EDITFORM);

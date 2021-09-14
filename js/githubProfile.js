@@ -7,7 +7,7 @@ USERNAMEFORM.addEventListener('submit', submit);
 USERDETAILS.addEventListener('click', showRepoList);
 
 class Fetch {
-  static fetchUser(username) {
+  fetchUser(username) {
     const SEARCHUSER = new Promise((resolve, reject) => {
       fetch(`https://api.github.com/users/${username}`)
         .then((response) => {
@@ -23,7 +23,7 @@ class Fetch {
 
     return SEARCHUSER;
   }
-  static fetchStarred(username) {
+  fetchStarred(username) {
     const SEARCHSTARS = new Promise((resolve, reject) => {
       fetch(`https://api.github.com/users/${username}/starred`)
         .then((response) => response.json())
@@ -33,7 +33,7 @@ class Fetch {
 
     return SEARCHSTARS;
   }
-  static fetchRepositories(username) {
+  fetchRepositories(username) {
     const SEARCHREPOS = new Promise((resolve, reject) => {
       fetch(`https://api.github.com/users/${username}/repos`)
         .then((response) => response.json())
@@ -163,7 +163,7 @@ function submit(e) {
   e.preventDefault();
 
   const USERNAME = USERNAMEFIELD.value;
-  const USERINFORMATION = Fetch.fetchUser(USERNAME);
+  const USERINFORMATION = new Fetch().fetchUser(USERNAME);
 
   USERINFORMATION.then((user) => {
     const {
@@ -180,7 +180,7 @@ function submit(e) {
       html_url,
     } = user;
 
-    const USERSTARS = Fetch.fetchStarred(login);
+    const USERSTARS = new Fetch().fetchStarred(login);
 
     USERSTARS.then((starredArr) => {
       let user = new User(
@@ -208,7 +208,7 @@ function showRepoList(e) {
     e.preventDefault();
 
     const USERLOGIN = document.getElementById('login').textContent;
-    const USERREPOS = Fetch.fetchRepositories(USERLOGIN);
+    const USERREPOS = new Fetch().fetchRepositories(USERLOGIN);
 
     USERREPOS.then((reposArr) => {
       UI.showUserRepositories(reposArr);
