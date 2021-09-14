@@ -17,9 +17,9 @@ const EDITSTATUS = document.getElementById('edit-checkbox');
 TASKFORM.addEventListener('submit', submit);
 TABLEBODY.addEventListener('click', deleteTask);
 TABLEBODY.addEventListener('click', showEditForm);
-SEARCHFIELD.addEventListener('keyup', searchTasks);
+SEARCHFIELD.addEventListener('keyup', filterTasks);
 FILTERFIELD.addEventListener('change', filterTasks);
-SORTBUTTON.addEventListener('click', sortByDate);
+SORTBUTTON.addEventListener('click', filterTasks);
 EDITFORM.addEventListener('submit', editTask);
 
 class Task {
@@ -87,52 +87,48 @@ class TaskList {
 
     return this.tasks;
   }
-  static sortTasks(tableRows, order) {
-    let sortedTasks;
-
+  sortTasks(order) {
     if (order === 'ASC') {
-      sortedTasks = tableRows.sort(
+      this.tasks = this.tasks.sort(
         (a, b) =>
-          new Date(b.children[4].textContent).getTime() -
-          new Date(a.children[4].textContent).getTime()
+          new Date(b.creationDate).getTime() -
+          new Date(a.creationDate).getTime()
       );
     } else if (order === 'DESC') {
-      sortedTasks = tableRows.sort(
+      this.tasks = this.tasks.sort(
         (a, b) =>
-          new Date(a.children[4].textContent).getTime() -
-          new Date(b.children[4].textContent).getTime()
+          new Date(a.creationDate).getTime() -
+          new Date(b.creationDate).getTime()
       );
     }
 
-    return sortedTasks;
+    return this.tasks;
   }
-  searchTasks(name) {
+  searchTasks(name, taskArray) {
     const SEARCHEDTASKS = [];
 
-    for (let task of this.tasks) {
+    for (let task of taskArray) {
       if (task.name.toLowerCase().includes(name.toLowerCase())) {
         SEARCHEDTASKS.push(task);
       }
     }
 
-    this.tasks = SEARCHEDTASKS;
-    return this.tasks;
+    return SEARCHEDTASKS;
   }
-  filterTasks(status) {
+  filterTasks(status, tasks) {
     const FILTEREDTASKS = [];
 
     if (status === 'None') {
-      return this.tasks;
+      return tasks;
     } else {
-      for (let task of this.tasks) {
+      for (let task of tasks) {
         if (task.status === status) {
           FILTEREDTASKS.push(task);
         }
       }
     }
 
-    this.tasks = FILTEREDTASKS;
-    return this.tasks;
+    return FILTEREDTASKS;
   }
 }
 
@@ -193,6 +189,13 @@ class UI {
   static HideEditForm(div, form) {
     div.removeChild(form);
   }
+  static changeDateIcon(icon) {
+    if (icon.className === 'bi bi-arrow-down-square') {
+      icon.className = 'bi bi-arrow-up-square';
+    } else if (icon.className === 'bi bi-arrow-up-square') {
+      icon.className = 'bi bi-arrow-down-square';
+    }
+  }
 }
 
 const TASKS = new TaskList();
@@ -243,56 +246,49 @@ function deleteTask(e) {
   }
 }
 
-function searchTasks() {
-  const TABLEROWS = Array.from(TABLEBODY.children);
-  const SEARCHEDTASKS = new TaskList().searchTasks(SEARCHFIELD.value);
-
-  for (let row of TABLEROWS) {
-    UI.removeTaskInTable(row);
-  }
-
-  for (let task of SEARCHEDTASKS) {
-    UI.addTaskInTable(TABLEBODY, task);
-  }
-}
-
-function filterTasks() {
-  const TABLEROWS = Array.from(TABLEBODY.children);
-  const FILTEREDTASKS = new TaskList().filterTasks(FILTERFIELD.value);
-
-  for (let row of TABLEROWS) {
-    UI.removeTaskInTable(row);
-  }
-
-  for (let task of FILTEREDTASKS) {
-    UI.addTaskInTable(TABLEBODY, task);
-  }
-}
-
-function sortByDate(e) {
+function filterTasks(e) {
   e.preventDefault();
 
   const TABLEROWS = Array.from(TABLEBODY.children);
-  let sortedTasks;
+  let filteredTasks;
+
+  UI.changeDateIcon(e.target);
 
   for (let row of TABLEROWS) {
     UI.removeTaskInTable(row);
   }
 
-  if (SORTBUTTON.children[0].classList.contains('bi-arrow-down-square')) {
-    SORTBUTTON.children[0].classList.remove('bi-arrow-down-square');
-    SORTBUTTON.children[0].classList.add('bi-arrow-up-square');
-
-    sortedTasks = TaskList.sortTasks(TABLEROWS, 'ASC');
+  if (SORTBUTTON.children[0].classList.contains('bi-arrow-up-square')) {
+    filteredTasks = new TaskList().sortTasks('ASC');
   } else {
-    SORTBUTTON.children[0].classList.remove('bi-arrow-up-square');
-    SORTBUTTON.children[0].classList.add('bi-arrow-down-square');
-
-    sortedTasks = TaskList.sortTasks(TABLEROWS, 'DESC');
+    filteredTasks = new TaskList().sortTasks('DESC');
   }
 
-  for (let task of sortedTasks) {
-    UI.addRowInTable(TABLEBODY, task);
+  if (SEARCHFIELD.value === '') {
+    filteredTasks = new TaskList().filterTasks(
+      FILTERFIELD.value,
+      filteredTasks
+    );
+  } else {
+    if (FILTERFIELD.value === 'None') {
+      filteredTasks = new TaskList().searchTasks(
+        SEARCHFIELD.value,
+        filteredTasks
+      );
+    } else {
+      filteredTasks = new TaskList().searchTasks(
+        SEARCHFIELD.value,
+        filteredTasks
+      );
+      filteredTasks = new TaskList().filterTasks(
+        FILTERFIELD.value,
+        filteredTasks
+      );
+    }
+  }
+
+  for (let task of filteredTasks) {
+    UI.addTaskInTable(TABLEBODY, task);
   }
 }
 
