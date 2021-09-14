@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HW | To-do List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <nav class="nav">
+        <div class="container nav-container">
+          <a class="logo" href="Index.html"><span>App</span>laudo</a>
+          <ul>
+            <li class="nav-item">
+              <a href="Index.html" class="nav-link">To-do List</a>
+            </li>
+            <li class="nav-item">
+              <a href="github.html" class="nav-link">GitHub Profile</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main id="main-section">
+      <div class="top-space"></div>
+      <div class="container form-div">
+        <form id="add-task-form" method="POST">
+          <div>
+            <label class="label" for="id-field">ID</label>
+            <input
+              class="input"
+              id="id-field"
+              type="text"
+              placeholder="ID"
+              readonly
+              disabled
+            />
+          </div>
+          <div>
+            <label class="label" for="name-field">Name</label>
+            <input
+              class="input"
+              id="name-field"
+              type="text"
+              placeholder="Name"
+            />
+          </div>
+          <div>
+            <label class="label" for="assignee-select">Assignment</label>
+            <select class="input" id="assignee-select">
+              <option>Frank</option>
+              <option>John</option>
+              <option>Alice</option>
+              <option>Mary</option>
+            </select>
+          </div>
+          <div class="checkbox-div">
+            <input
+              class="checkbox"
+              type="checkbox"
+              name="checkbox"
+              id="checkbox"
+            />
+            <label for="checkbox"> Done </label>
+          </div>
+          <input
+            id="create-task-button"
+            class="button"
+            type="submit"
+            value="Create Task"
+          />
+        </form>
+      </div>
+    </main>
+    <section class="container" id="table-section">
+      <div class="filters-div">
+        <form id="table-form" method="POST">
+          <div>
+            <label class="label" for="search-field">Search by name</label>
+            <input
+              class="input"
+              id="search-field"
+              type="text"
+              placeholder="Name"
+            />
+          </div>
+          <div>
+            <label class="label" for="filter-field">Filter by status</label>
+            <select class="input" id="filter-field">
+              <option>None</option>
+              <option>Pending</option>
+              <option>Done</option>
+            </select>
+          </div>
+        </form>
+        <form class="edit-form" id="edit-task-form" method="POST">
+          <input class="input" id="edit-id-field" readonly disabled />
+          <input class="input" id="edit-name-field" />
+          <select class="input" id="edit-assignee-field">
+            <option>Frank</option>
+            <option>John</option>
+            <option>Alice</option>
+            <option>Mary</option>
+          </select>
+          <div class="checkbox-div">
+            <input
+              class="checkbox-edit"
+              type="checkbox"
+              name="edit-checkbox"
+              id="edit-checkbox"
+            />
+            <label class="edit-label" for="edit-checkbox"> Done </label>
+          </div>
+          <input class="button edit-button" type="submit" value="Edit Task" />
+        </form>
+      </div>
+      <div class="table-div">
+        <table class="table">
+          <thead>
+            <tr class="table-head">
+              <th class="table-cell">ID</th>
+              <th class="table-cell">Name</th>
+              <th class="table-cell">Assignee</th>
+              <th class="table-cell">Status</th>
+              <th class="table-cell date-cell">
+                Creation Date
+                <a href="#" id="sort-button"
+                  ><i class="bi bi-arrow-down-square"></i
+                ></a>
+              </th>
+              <th class="table-cell"></th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <script src="js/toDoList.js"></script>
+  </body>
+</html>

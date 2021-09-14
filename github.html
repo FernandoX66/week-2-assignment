@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HW | GitHub Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav nav-github">
+        <div class="container nav-container">
+          <a class="logo" href="github.html"><i class="bi bi-github"></i></a>
+          <ul>
+            <li class="nav-item">
+              <a href="Index.html" class="nav-link">To-do List</a>
+            </li>
+            <li class="nav-item">
+              <a href="github.html" class="nav-link">GitHub Profile</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main id="main-section">
+      <div class="top-space-github">
+        <div class="container github-form-label">
+          <form id="search-user-form" method="POST">
+            <label class="label github-label" for="user-field">Username</label>
+            <input
+              class="input github-input"
+              id="user-field"
+              type="text"
+              placeholder="Username"
+            />
+            <input
+              class="button github-button"
+              id="search-user-button"
+              type="submit"
+              value="Search user"
+            />
+          </form>
+        </div>
+      </div>
+      <div class="container" id="user-details"></div>
+    </main>
+
+    <script src="js/githubProfile.js"></script>
+  </body>
+</html>
