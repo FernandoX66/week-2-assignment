@@ -112,8 +112,8 @@ img {
 }
 
 .top-space-github {
-  background-image: linear-gradient(to bottom, #15161d 0%, #232531 100%);
-  height: 190px;
+  background-image: linear-gradient(to bottom, #15161d 0%, #2b2d3a 100%);
+  height: 140px;
 }
 
 .form-div {
@@ -447,4 +447,52 @@ table {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.user-to-show-card {
+  padding: 10px 10px;
+  margin-top: 15px;
+  background-color: #f3f3f3;
+  line-height: 35px;
+  display: grid;
+  grid-template-columns: 20% 80%;
+  column-gap: 30px;
+  align-items: center;
+  border: 1px solid #e9e9e9;
+  border-radius: 2px;
+}
+
+.user-to-show-card p {
+  margin: 0;
+}
+
+.user-to-show-card .user-follows {
+  justify-content: left;
+}
+
+.show-user {
+  text-decoration: none;
+  color: rgb(48, 48, 245);
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.show-user:hover {
+  text-decoration: underline;
+}
+
+.error-div {
+  color: #afafaf;
+  font-weight: bold;
+  font-size: 22px;
+  text-align: center;
+}
+
+.error-div p {
+  margin: 25px 0 0 0;
+}
+
+.bi-x-square {
+  color: #afafaf;
+  font-size: 50px;
 }

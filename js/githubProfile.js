@@ -1,10 +1,20 @@
 const USERNAMEFORM = document.getElementById('search-user-form');
 const USERNAMEFIELD = document.getElementById('user-field');
-const SEARCHBUTTON = document.getElementById('search-user-button');
 const USERDETAILS = document.getElementById('user-details');
 
-USERNAMEFORM.addEventListener('submit', submit);
+USERNAMEFIELD.addEventListener('keyup', debounce(findUser, 800));
+USERDETAILS.addEventListener('click', showUser);
 USERDETAILS.addEventListener('click', showRepoList);
+
+function debounce(cb, wait) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      cb(...args);
+    }, wait);
+  };
+}
 
 class Fetch {
   fetchUser(username) {
@@ -17,6 +27,16 @@ class Fetch {
             reject('User not found');
           }
         })
+        .then((user) => resolve(user))
+        .catch((err) => console.log(err));
+    });
+
+    return SEARCHUSER;
+  }
+  fetchUserToShow(username) {
+    const SEARCHUSER = new Promise((resolve, reject) => {
+      fetch(`https://api.github.com/users/${username}`)
+        .then((response) => response.json())
         .then((user) => resolve(user))
         .catch((err) => reject(err));
     });
@@ -92,6 +112,37 @@ class User {
 }
 
 class UI {
+  static showUserFounded(div, user) {
+    let name = user.name;
+
+    if (name === null) {
+      name = 'No name';
+    }
+
+    div.innerHTML = `
+      <div class="user-to-show-card">
+        <img class="user-to-show-img" src="${user.avatar_url}">
+        <div class="user-to-show-details">
+          <a href="#" class="show-user">${name}</a>
+          <p id="user-to-show">${user.login}</p>
+          <div class="user-follows">
+            <i class="bi bi-people"></i>
+            <p>${user.followers} followers</p>
+            <p>·</p>
+            <p>${user.following} following</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  static showUserNotFounded(div) {
+    div.innerHTML = `
+      <div class="error-div">
+        <p>User not found</p>
+        <i class="bi bi-x-square"></i>
+      </div>
+    `;
+  }
   static showUserDetails(div, user) {
     div.innerHTML = `
       <div class="user-card">
@@ -159,48 +210,61 @@ class UI {
   }
 }
 
-function submit(e) {
+function findUser() {
+  const USERNAME = USERNAMEFIELD.value;
+  const USERFOUND = new Fetch().fetchUser(USERNAME);
+
+  USERFOUND.then((user) => {
+    UI.showUserFounded(USERDETAILS, user);
+  }).catch(() => {
+    UI.showUserNotFounded(USERDETAILS);
+  });
+}
+
+function showUser(e) {
   e.preventDefault();
 
-  const USERNAME = USERNAMEFIELD.value;
-  const USERINFORMATION = new Fetch().fetchUser(USERNAME);
+  if (e.target.classList.contains('show-user')) {
+    const USERNAME = document.getElementById('user-to-show').textContent;
+    const USERINFORMATION = new Fetch().fetchUserToShow(USERNAME);
 
-  USERINFORMATION.then((user) => {
-    const {
-      login,
-      avatar_url,
-      name,
-      followers,
-      following,
-      public_repos,
-      company,
-      blog,
-      location,
-      created_at,
-      html_url,
-    } = user;
-
-    const USERSTARS = new Fetch().fetchStarred(login);
-
-    USERSTARS.then((starredArr) => {
-      let user = new User(
+    USERINFORMATION.then((user) => {
+      const {
+        login,
         avatar_url,
         name,
-        login,
-        starredArr,
-        public_repos,
         followers,
         following,
+        public_repos,
         company,
         blog,
         location,
         created_at,
-        html_url
-      ).userValidations();
+        html_url,
+      } = user;
 
-      UI.showUserDetails(USERDETAILS, user);
+      const USERSTARS = new Fetch().fetchStarred(login);
+
+      USERSTARS.then((starredArr) => {
+        let user = new User(
+          avatar_url,
+          name,
+          login,
+          starredArr,
+          public_repos,
+          followers,
+          following,
+          company,
+          blog,
+          location,
+          created_at,
+          html_url
+        ).userValidations();
+
+        UI.showUserDetails(USERDETAILS, user);
+      }).catch((err) => console.log(err));
     }).catch((err) => console.log(err));
-  }).catch((err) => alert(err));
+  }
 }
 
 function showRepoList(e) {
